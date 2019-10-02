@@ -38,6 +38,17 @@ public class UserController {
         return modelAndView;
     }
 
+    @GetMapping("/new")
+    public ModelAndView addUser() {
+        User user = new User();
+        user.setRole("user");
+        System.out.println(user);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("edit-form");
+        modelAndView.addObject("user", user);
+        return modelAndView;
+    }
+
     @GetMapping("/edit/{id}")
     public ModelAndView editUser(@PathVariable("id") long id) {
         User user = userService.getUser(id);
@@ -50,7 +61,12 @@ public class UserController {
     @PostMapping("/edit")
     public ModelAndView editUser(@ModelAttribute("user") User user) {
         ModelAndView modelAndView = new ModelAndView();
-        userService.updateUser(user);
+        System.out.println(user);
+        if (user.getId() == null) {
+            userService.addUser(user);
+        } else {
+            userService.updateUser(user);
+        }
         modelAndView.setViewName("redirect:/");
         return modelAndView;
     }

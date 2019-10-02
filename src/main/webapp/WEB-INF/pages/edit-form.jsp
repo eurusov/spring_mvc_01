@@ -48,8 +48,8 @@
     <form action="${empty user.id ? addUrl : editUrl}" method="post">
         <c:if test="${!empty user.id}">
             <input type="hidden" name="id" value="${user.id}"/>
-            <input type="hidden" name="role" value="${user.role}"/>
         </c:if>
+        <input type="hidden" name="role" value="${user.role}"/>
         <label>E-mail
             <input type="text" name="email" size="60"
                    value="${user.email}">
