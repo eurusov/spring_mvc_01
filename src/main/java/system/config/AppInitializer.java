@@ -18,7 +18,7 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
     @Override
     protected String[] getServletMappings() {
-        return new String[]{"/"};
+        return new String[]{"/", "/login"}; // TODO: Разобраться зачем здесь нужен /login, если он и так есть в аннотоции контроллера
     }
 
     @Override
