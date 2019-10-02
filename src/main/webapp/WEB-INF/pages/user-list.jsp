@@ -110,7 +110,7 @@
                 <td><c:out value="${user.role}"/></td>
                 <td>
                     <a class="action_link" href="edit/${user.id}">Edit</a>
-                    <a class="action_link" href="delete?id=<c:out value='${user.id}' />">Delete</a>
+                    <a class="action_link" href="delete/${user.id}">Delete</a>
                 </td>
             </tr>
         </c:forEach>

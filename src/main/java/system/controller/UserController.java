@@ -70,4 +70,12 @@ public class UserController {
         modelAndView.setViewName("redirect:/");
         return modelAndView;
     }
+
+    @GetMapping("/delete/{id}")
+    public ModelAndView deleteUser(@PathVariable("id") long id) {
+        userService.deleteUser(id);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/");
+        return modelAndView;
+    }
 }
