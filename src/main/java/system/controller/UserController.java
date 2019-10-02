@@ -3,6 +3,9 @@ package system.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import system.model.User;
 import system.service.UserService;
@@ -32,6 +35,23 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("user-list");
         modelAndView.addObject("listUser", films);
+        return modelAndView;
+    }
+
+    @GetMapping("/edit/{id}")
+    public ModelAndView editUser(@PathVariable("id") long id) {
+        User user = userService.getUser(id);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("edit-form");
+        modelAndView.addObject("user", user);
+        return modelAndView;
+    }
+
+    @PostMapping("/edit")
+    public ModelAndView editUser(@ModelAttribute("user") User user) {
+        ModelAndView modelAndView = new ModelAndView();
+        userService.updateUser(user);
+        modelAndView.setViewName("redirect:/");
         return modelAndView;
     }
 }
