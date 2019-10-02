@@ -1,20 +1,24 @@
 package system.dao;
 
 import system.model.User;
-import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
 import java.util.List;
 
-@Repository
-public class UserDao {
-    private List<User> users = Arrays.asList(
-            new User("admin", "1"),
-            new User("user1", "2")
-    );
+public interface UserDao {
 
-    public List<User> getAllUsers() {
-        return users;
-    }
+    // create
+    Long addUser(User user);
+
+    // read
+    User getUser(Long id);
+
+    List<User> getAllUser();
+
+    // update
+    boolean updateUser(User user);
+
+    // delete
+    boolean deleteUser(Long id);
+
+    User getUser(String email, String password);
 }
-
