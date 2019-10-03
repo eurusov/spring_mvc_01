@@ -26,7 +26,7 @@
         >
         <label for="password">Password</label>
         <input type="password" id="password" name="password" size="45"
-               value="<c:out value='${authUser.password}' />"
+               value="${authUser.password}"
         >
         <input type="submit" value="Login">
     </form>

@@ -2,14 +2,12 @@ package system.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import system.model.User;
 import system.service.UserService;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -23,18 +21,33 @@ public class UserController {
         this.userService = userService;
     }
 
-//    @GetMapping("/list")
-//    public @ResponseBody
-//    List<User> getAllUsers() {
-//        return userService.getAllUser();
-//    }
-
     @GetMapping("/")
-    public ModelAndView userList() {
-        List<User> films = userService.getAllUser();
+    public ModelAndView mainEntryPoint(HttpSession httpSession) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("user-list");
-        modelAndView.addObject("listUser", films);
+
+        User authUser = (User) httpSession.getAttribute("authUser");
+
+        System.out.println("From mainEntryPoint(), authUser = " + authUser);
+
+        // Non-authenticated user
+        if (authUser == null) {
+            authUser = new User();
+            httpSession.setAttribute("authUser", authUser);
+        }
+        // Non-authorized user
+        if (authUser.getId() == null) {
+            modelAndView.addObject("authUser", authUser);
+            modelAndView.setViewName("login");
+        } else if (authUser.getRole().equals("admin")) {  // Authorize user
+            List<User> users = userService.getAllUser();
+            modelAndView.setViewName("user-list");
+            modelAndView.addObject("listUser", users);
+        } else {
+            modelAndView.setViewName("user-page");
+        }
+
+        System.out.println("From mainEntryPoint(), authUser = " + authUser);
+
         return modelAndView;
     }
 
