@@ -31,7 +31,6 @@ public class LoginController {
 
     @PostMapping("/login")
     public String doLoginPost(@ModelAttribute("authUser") User authUser, HttpSession httpSession) {
-//        ModelAndView modelAndView = new ModelAndView();
         User user = userService.getUser(authUser.getEmail(), authUser.getPassword());
         if (user == null || user.getId() == null) {
             authUser.setId(null);

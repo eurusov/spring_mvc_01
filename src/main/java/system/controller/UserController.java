@@ -23,24 +23,18 @@ public class UserController {
 
     @GetMapping("/")
     public String mainEntryPoint(HttpSession httpSession) {
-//        ModelAndView modelAndView = new ModelAndView();
         User authUser = (User) httpSession.getAttribute("authUser");
 
-        // Non-authenticated user
         if (authUser == null) {
             authUser = new User();
             httpSession.setAttribute("authUser", authUser);
         }
-        // Non-authorized user
         if (authUser.getId() == null) {
             return "redirect:/login";
-//            modelAndView.setViewName("redirect:/login");
-        } else if (authUser.getRole().equals("admin")) {  // Authorize user
+        } else if (authUser.getRole().equals("admin")) {
             return "redirect:/list";
-//            modelAndView.setViewName("redirect:/list");
         } else {
             return "redirect:/info?id=" + authUser.getId();
-//            modelAndView.setViewName("redirect:/info/" + authUser.getId());
         }
     }
 
@@ -66,15 +60,12 @@ public class UserController {
 
     @PostMapping("/edit")
     public String editUser(@ModelAttribute("user") User user) {
-//        ModelAndView modelAndView = new ModelAndView();
         System.out.println(user);
         if (user.getId() == null) {
             userService.addUser(user);
         } else {
             userService.updateUser(user);
         }
-//        modelAndView.setViewName("redirect:/");
-//        return modelAndView;
         return "redirect:/";
     }
 
@@ -94,18 +85,11 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    public ModelAndView showUserInfo(@RequestParam String id) {
+    public ModelAndView showUserInfo(@RequestParam long id) {
         ModelAndView modelAndView = new ModelAndView();
-        Long idLong;
-        try {
-            idLong = Long.valueOf(id);
-            User user = userService.getUser(idLong);
-            modelAndView.addObject("authUser", user);
-            modelAndView.setViewName("user-info");
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid number parameter: " + id);
-            modelAndView.setViewName("redirect:/");
-        }
+        User user = userService.getUser(id);
+        modelAndView.addObject("authUser", user);
+        modelAndView.setViewName("user-info");
         return modelAndView;
     }
 }
