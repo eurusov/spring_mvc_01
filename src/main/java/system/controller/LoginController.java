@@ -30,8 +30,8 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ModelAndView doLoginPost(@ModelAttribute("authUser") User authUser, HttpSession httpSession) {
-        ModelAndView modelAndView = new ModelAndView();
+    public String doLoginPost(@ModelAttribute("authUser") User authUser, HttpSession httpSession) {
+//        ModelAndView modelAndView = new ModelAndView();
         User user = userService.getUser(authUser.getEmail(), authUser.getPassword());
         if (user == null || user.getId() == null) {
             authUser.setId(null);
@@ -41,19 +41,16 @@ public class LoginController {
             authUser.setLastName(null);
             authUser.setCountry(null);
             authUser.setRole(null);
-            modelAndView.setViewName("login");
+            return ("redirect:/login");
         } else {
             httpSession.setAttribute("authUser", user);
-            modelAndView.setViewName("redirect:/");
+            return "redirect:/";
         }
-        return modelAndView;
     }
 
     @GetMapping("/logout")
-    public ModelAndView doLogout(HttpSession httpSession) {
-        httpSession.removeAttribute("authUser");
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("login");
-        return modelAndView;
+    public String doLogout(HttpSession httpSession) {
+        httpSession.invalidate();
+        return "redirect:/login";
     }
 }

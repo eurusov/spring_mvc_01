@@ -22,12 +22,9 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public ModelAndView mainEntryPoint(HttpSession httpSession) {
-        ModelAndView modelAndView = new ModelAndView();
-
+    public String mainEntryPoint(HttpSession httpSession) {
+//        ModelAndView modelAndView = new ModelAndView();
         User authUser = (User) httpSession.getAttribute("authUser");
-
-        System.out.println("From mainEntryPoint(), authUser = " + authUser);
 
         // Non-authenticated user
         if (authUser == null) {
@@ -36,19 +33,15 @@ public class UserController {
         }
         // Non-authorized user
         if (authUser.getId() == null) {
-            modelAndView.addObject("authUser", authUser);
-            modelAndView.setViewName("login");
+            return "redirect:/login";
+//            modelAndView.setViewName("redirect:/login");
         } else if (authUser.getRole().equals("admin")) {  // Authorize user
-            List<User> users = userService.getAllUser();
-            modelAndView.setViewName("user-list");
-            modelAndView.addObject("listUser", users);
+            return "redirect:/list";
+//            modelAndView.setViewName("redirect:/list");
         } else {
-            modelAndView.setViewName("user-page");
+            return "redirect:/info?id=" + authUser.getId();
+//            modelAndView.setViewName("redirect:/info/" + authUser.getId());
         }
-
-        System.out.println("From mainEntryPoint(), authUser = " + authUser);
-
-        return modelAndView;
     }
 
     @GetMapping("/new")
@@ -57,38 +50,62 @@ public class UserController {
         user.setRole("user");
         System.out.println(user);
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("edit-form");
+        modelAndView.setViewName("edit-and-new");
         modelAndView.addObject("user", user);
         return modelAndView;
     }
 
-    @GetMapping("/edit/{id}")
-    public ModelAndView editUser(@PathVariable("id") long id) {
+    @GetMapping("/edit")
+    public ModelAndView editUser(@RequestParam("id") long id) {
         User user = userService.getUser(id);
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("edit-form");
+        modelAndView.setViewName("edit-and-new");
         modelAndView.addObject("user", user);
         return modelAndView;
     }
 
     @PostMapping("/edit")
-    public ModelAndView editUser(@ModelAttribute("user") User user) {
-        ModelAndView modelAndView = new ModelAndView();
+    public String editUser(@ModelAttribute("user") User user) {
+//        ModelAndView modelAndView = new ModelAndView();
         System.out.println(user);
         if (user.getId() == null) {
             userService.addUser(user);
         } else {
             userService.updateUser(user);
         }
-        modelAndView.setViewName("redirect:/");
+//        modelAndView.setViewName("redirect:/");
+//        return modelAndView;
+        return "redirect:/";
+    }
+
+    @GetMapping("/delete")
+    public String deleteUser(@RequestParam("id") long id) {
+        userService.deleteUser(id);
+        return "redirect:/";
+    }
+
+    @GetMapping("/list")
+    public ModelAndView showUserList() {
+        ModelAndView modelAndView = new ModelAndView();
+        List<User> users = userService.getAllUsers();
+        modelAndView.setViewName("user-list");
+        modelAndView.addObject("listUser", users);
         return modelAndView;
     }
 
-    @GetMapping("/delete/{id}")
-    public ModelAndView deleteUser(@PathVariable("id") long id) {
-        userService.deleteUser(id);
+    @GetMapping("/info")
+    public ModelAndView showUserInfo(@RequestParam String id) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/");
+        Long idLong;
+        try {
+            idLong = Long.valueOf(id);
+            User user = userService.getUser(idLong);
+            modelAndView.addObject("authUser", user);
+            modelAndView.setViewName("user-info");
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number parameter: " + id);
+            modelAndView.setViewName("redirect:/");
+        }
         return modelAndView;
     }
 }

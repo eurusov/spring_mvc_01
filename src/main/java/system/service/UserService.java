@@ -12,7 +12,7 @@ public interface UserService {
 
     User getUser(String email, String password);
 
-    List<User> getAllUser();
+    List<User> getAllUsers();
 
     boolean updateUser(User user);
 

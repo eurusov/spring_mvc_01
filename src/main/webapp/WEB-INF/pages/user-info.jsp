@@ -78,7 +78,7 @@
             <td><c:out value="${authUser.country}"/></td>
         </tr>
     </table>
-    <a id="edit_link" class="link_button" href="edit/${authUser.id}">Edit profile</a>
+    <a id="edit_link" class="link_button" href="edit?id=${authUser.id}">Edit profile</a>
 </div>
 </body>
 </html>

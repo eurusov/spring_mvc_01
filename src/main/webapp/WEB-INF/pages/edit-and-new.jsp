@@ -18,14 +18,7 @@
 </head>
 <body>
 
-<%--<jsp:useBean id="user" scope="request" class="model.User"/>--%>
-<%--<jsp:useBean id="loggedUser" scope="session" class="model.User"/>--%>
-
-<%--<c:set var="title" value="Register new user"/>--%>
 <c:set var="btm_text" value="Back to Login"/>
-<%--<c:if test="${user.id != null}">--%>
-<%--    <c:set var="title" value="Edit user"/>--%>
-<%--</c:if>--%>
 <%--<c:if test="${loggedUser.role != null}">--%>
 <%--    <c:set var="btm_text" value="User info"/>--%>
 <%--</c:if>--%>
@@ -42,10 +35,8 @@
     </div>
 </header>
 
-<c:url var="editUrl" value="/edit"/>
-<c:url var="addUrl" value="/edit"/>
 <div class="content">
-    <form action="${empty user.id ? addUrl : editUrl}" method="post">
+    <form action="${pageContext.request.contextPath}/edit" method="post">
         <c:if test="${!empty user.id}">
             <input type="hidden" name="id" value="${user.id}"/>
         </c:if>

@@ -109,8 +109,8 @@
                 <td><c:out value="${user.country}"/></td>
                 <td><c:out value="${user.role}"/></td>
                 <td>
-                    <a class="action_link" href="edit/${user.id}">Edit</a>
-                    <a class="action_link" href="delete/${user.id}">Delete</a>
+                    <a class="action_link" href="edit?id=${user.id}">Edit</a>
+                    <a class="action_link" href="delete?id=${user.id}">Delete</a>
                 </td>
             </tr>
         </c:forEach>
