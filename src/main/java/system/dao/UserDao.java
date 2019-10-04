@@ -12,7 +12,7 @@ public interface UserDao {
     // read
     User getUser(Long id);
 
-    List<User> getAllUser();
+    List<User> getAllUsers();
 
     // update
     boolean updateUser(User user);

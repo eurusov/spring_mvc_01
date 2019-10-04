@@ -27,14 +27,14 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getUser(Long id) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         return session.get(User.class, id);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<User> getAllUser() {
-        Session session = sessionFactory.getCurrentSession();
+    public List<User> getAllUsers() {
+        Session session = sessionFactory.openSession();
         return session.createQuery("FROM User").list();
     }
 
@@ -81,7 +81,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getUser(String email, String password) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         Query query = session.createQuery("FROM User WHERE email=:e_mail and password=:pass");
         query.setParameter("e_mail", email);
         query.setParameter("pass", password);
