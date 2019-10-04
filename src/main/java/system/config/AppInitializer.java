@@ -2,9 +2,9 @@ package system.config;
 
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
-import system.controller.AdminFilter;
-import system.controller.PassThrowFilter;
-import system.controller.UserFilter;
+import system.filter.AdminFilter;
+import system.filter.AuthFilter;
+import system.filter.UserFilter;
 
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
@@ -37,11 +37,11 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
         userFilter.addMappingForUrlPatterns(null, false, "/edit");
         userFilter.addMappingForUrlPatterns(null, false, "/info");
 
-        FilterRegistration.Dynamic anonFilter = servletContext.addFilter("anonFilter", new PassThrowFilter());
-        anonFilter.addMappingForUrlPatterns(null, false, "/list");
-        anonFilter.addMappingForUrlPatterns(null, false, "/delete");
-        anonFilter.addMappingForUrlPatterns(null, false, "/edit");
-        anonFilter.addMappingForUrlPatterns(null, false, "/info");
+        FilterRegistration.Dynamic authFilter = servletContext.addFilter("authFilter", new AuthFilter());
+        authFilter.addMappingForUrlPatterns(null, false, "/list");
+        authFilter.addMappingForUrlPatterns(null, false, "/delete");
+        authFilter.addMappingForUrlPatterns(null, false, "/edit");
+        authFilter.addMappingForUrlPatterns(null, false, "/info");
 
         super.onStartup(servletContext);
     }

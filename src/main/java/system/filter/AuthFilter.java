@@ -1,4 +1,4 @@
-package system.controller;
+package system.filter;
 
 import system.model.User;
 
@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-//@WebFilter(filterName = "UserFilter", urlPatterns = {"/"})
-public class PassThrowFilter implements Filter {
+//@WebFilter(filterName = "AuthFilter", urlPatterns = {"/"})
+public class AuthFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;

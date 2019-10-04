@@ -23,8 +23,9 @@ public class LoginController {
 
     @GetMapping("/login")
 //    public ModelAndView doLogin(@SessionAttribute("authUser") User authUser) {
-    public ModelAndView doLogin() {
+    public ModelAndView doLogin(@ModelAttribute("authUser") User authUser) {
         ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.addObject("authUser", authUser);
         modelAndView.setViewName("login");
         return modelAndView;
     }
@@ -32,14 +33,7 @@ public class LoginController {
     @PostMapping("/login")
     public String doLoginPost(@ModelAttribute("authUser") User authUser, HttpSession httpSession) {
         User user = userService.getUser(authUser.getEmail(), authUser.getPassword());
-        if (user == null || user.getId() == null) {
-            authUser.setId(null);
-            authUser.setEmail(null);
-            authUser.setPassword(null);
-            authUser.setFirstName(null);
-            authUser.setLastName(null);
-            authUser.setCountry(null);
-            authUser.setRole(null);
+        if (user == null) {
             return ("redirect:/login");
         } else {
             httpSession.setAttribute("authUser", user);
