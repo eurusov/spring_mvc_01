@@ -49,6 +49,13 @@ public class UserController {
         return modelAndView;
     }
 
+    @PostMapping("/new")
+    public String addNewUser(@ModelAttribute("user") User user) {
+        userService.addUser(user);
+        return "redirect:/";
+    }
+
+
     @GetMapping("/edit")
     public ModelAndView editUser(@RequestParam("id") long id) {
         User user = userService.getUser(id);
@@ -60,12 +67,7 @@ public class UserController {
 
     @PostMapping("/edit")
     public String editUser(@ModelAttribute("user") User user) {
-        System.out.println(user);
-        if (user.getId() == null) {
-            userService.addUser(user);
-        } else {
-            userService.updateUser(user);
-        }
+        userService.updateUser(user);
         return "redirect:/";
     }
 

@@ -36,7 +36,7 @@
 </header>
 
 <div class="content">
-    <form action="${pageContext.request.contextPath}/edit" method="post">
+    <form action=${empty user.id ? "new" : "edit"} method="post">
         <c:if test="${!empty user.id}">
             <input type="hidden" name="id" value="${user.id}"/>
         </c:if>
