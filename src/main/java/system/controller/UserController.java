@@ -21,59 +21,69 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
+    /**
+     * Redirects user according to one of three options:
+     * 1) if the user is not logged in - redirects him to the login page;
+     * 2) if  the  user is logged  in with admin rights - redirects him to the /list URL;
+     * 3) if the user is logged in without admin rights - redirects him to his /info URL.
+     */
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public String mainEntryPoint(HttpSession httpSession) {
-        User authUser = (User) httpSession.getAttribute("authUser");
+        User sessionUser = (User) httpSession.getAttribute("sessionUser");
 
-        if (authUser == null) {
-            authUser = new User();
-            httpSession.setAttribute("authUser", authUser);
-        }
-        if (authUser.getId() == null) {
+        System.out.println("[GET] | mainEntryPoint(...) | sessionUser = " + sessionUser);
+
+        if (sessionUser == null || sessionUser.getId() == null) {
             return "redirect:/login";
-        } else if (authUser.getRole().equals("admin")) {
+        } else if (sessionUser.getRole().equals("admin")) {
             return "redirect:/list";
         } else {
-            return "redirect:/info?id=" + authUser.getId();
+            return "redirect:/info?id=" + sessionUser.getId();
         }
     }
 
-    @GetMapping("/new")
+    @RequestMapping(value = "/new", method = RequestMethod.GET)
     public ModelAndView addUser() {
         User user = new User();
         user.setRole("user");
-        System.out.println(user);
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("edit-and-new");
         modelAndView.addObject("user", user);
+        modelAndView.setViewName("edit-and-new");
         return modelAndView;
     }
 
-    @PostMapping("/new")
+    @RequestMapping(value = "/new", method = RequestMethod.POST)
     public String addNewUser(@ModelAttribute("user") User user) {
         userService.addUser(user);
         return "redirect:/";
     }
 
 
-    @GetMapping("/edit")
+    @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public ModelAndView editUser(@RequestParam("id") long id) {
         User user = userService.getUser(id);
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("edit-and-new");
         modelAndView.addObject("user", user);
+        modelAndView.setViewName("edit-and-new");
         return modelAndView;
     }
 
-    @PostMapping("/edit")
-    public String editUser(@ModelAttribute("user") User user) {
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    public String editUser(@ModelAttribute("user") User user, HttpSession httpSession) {
         userService.updateUser(user);
+        /* if the user updated his own data, then we need to update the session user */
+        User sessionUser = (User) httpSession.getAttribute("sessionUser");
+        if (sessionUser.getId().equals(user.getId())) {
+            httpSession.setAttribute("sessionUser", user);
+        }
         return "redirect:/";
     }
 
     @GetMapping("/delete")
     public String deleteUser(@RequestParam("id") long id) {
-        userService.deleteUser(id);
+        System.out.println("[GET] | deleteUser(...) | id = " + id);
+        boolean deleted = userService.deleteUser(id);
+        System.out.println("deleted = " + deleted);
         return "redirect:/";
     }
 
@@ -88,10 +98,10 @@ public class UserController {
 
     @GetMapping("/info")
     public ModelAndView showUserInfo(@RequestParam long id) {
-        ModelAndView modelAndView = new ModelAndView();
         User user = userService.getUser(id);
-        modelAndView.addObject("authUser", user);
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("user-info");
+        modelAndView.addObject("user", user);
         return modelAndView;
     }
 }

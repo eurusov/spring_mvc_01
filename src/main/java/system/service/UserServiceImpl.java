@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean deleteUser(Long id) {
+        System.out.println("UserServiceImpl | deleteUser(...) | id = " + id);
         return userDao.deleteUser(id);
     }
 }

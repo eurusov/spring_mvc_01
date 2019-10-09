@@ -2,9 +2,7 @@ package system.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import system.model.User;
 import system.service.UserService;
@@ -21,22 +19,21 @@ public class LoginController {
         this.userService = userService;
     }
 
-    @GetMapping("/login")
-//    public ModelAndView doLogin(@SessionAttribute("authUser") User authUser) {
-    public ModelAndView doLogin(@ModelAttribute("authUser") User authUser) {
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public ModelAndView doLogin() {
         ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.addObject("authUser", authUser);
         modelAndView.setViewName("login");
+        modelAndView.addObject("user", new User());
         return modelAndView;
     }
 
-    @PostMapping("/login")
-    public String doLoginPost(@ModelAttribute("authUser") User authUser, HttpSession httpSession) {
-        User user = userService.getUser(authUser.getEmail(), authUser.getPassword());
-        if (user == null) {
-            return ("redirect:/login");
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String doLoginPost(@ModelAttribute("user") User user, HttpSession httpSession) {
+        User authUser = userService.getUser(user.getEmail(), user.getPassword());
+        if (authUser == null) {
+            return "redirect:/login";
         } else {
-            httpSession.setAttribute("authUser", user);
+            httpSession.setAttribute("sessionUser", authUser);
             return "redirect:/";
         }
     }

@@ -3,7 +3,6 @@ package system.config;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 import system.filter.AdminFilter;
-import system.filter.AuthFilter;
 import system.filter.UserFilter;
 
 import javax.servlet.FilterRegistration;
@@ -27,28 +26,23 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
         characterEncodingFilter.setEncoding("UTF-8");
         characterEncodingFilter.setForceEncoding(true);
         FilterRegistration.Dynamic encodingFilter = servletContext.addFilter("encodingFilter", characterEncodingFilter);
-        encodingFilter.addMappingForUrlPatterns(null, false, "/**");
-
-        FilterRegistration.Dynamic adminFilter = servletContext.addFilter("adminFilter", new AdminFilter());
-        adminFilter.addMappingForUrlPatterns(null, false, "/list");
-        adminFilter.addMappingForUrlPatterns(null, false, "/delete");
+        encodingFilter.addMappingForUrlPatterns(null, true, "/*"); // TODO: Почему здесь не работает "/**"
 
         FilterRegistration.Dynamic userFilter = servletContext.addFilter("userFilter", new UserFilter());
-        userFilter.addMappingForUrlPatterns(null, false, "/edit");
-        userFilter.addMappingForUrlPatterns(null, false, "/info");
+        userFilter.addMappingForUrlPatterns(null, true, "/edit", "/info");
 
-        FilterRegistration.Dynamic authFilter = servletContext.addFilter("authFilter", new AuthFilter());
-        authFilter.addMappingForUrlPatterns(null, false, "/list");
-        authFilter.addMappingForUrlPatterns(null, false, "/delete");
-        authFilter.addMappingForUrlPatterns(null, false, "/edit");
-        authFilter.addMappingForUrlPatterns(null, false, "/info");
+        FilterRegistration.Dynamic adminFilter = servletContext.addFilter("adminFilter", new AdminFilter());
+        adminFilter.addMappingForUrlPatterns(null, true, "/list", "/delete");
+
+//        FilterRegistration.Dynamic authFilter = servletContext.addFilter("authFilter", new AuthFilter());
+//        authFilter.addMappingForUrlPatterns(null, false, "/list", "/delete", "/edit", "/info");
 
         super.onStartup(servletContext);
     }
 
     @Override
     protected String[] getServletMappings() {
-        return new String[]{"/", "/login"}; // TODO: Разобраться зачем здесь нужен /login, если он и так есть в аннотоции контроллера
+        return new String[]{"/", "/login", "/list", "/new", "/edit", "/info", "/delete"}; // Здесь не работает "/*" и "/**"
     }
 
 //    @Override

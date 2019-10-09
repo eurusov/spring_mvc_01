@@ -70,6 +70,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public boolean deleteUser(Long id) {
+        System.out.println("UserDaoImpl | deleteUser(...) | id = " + id);
         Session session = sessionFactory.getCurrentSession();
         User userToDelete = session.get(User.class, id);
         if (userToDelete == null) {

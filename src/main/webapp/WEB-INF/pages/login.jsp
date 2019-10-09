@@ -22,11 +22,11 @@
     <form action="login" method="post">
         <label for="email">E-mail</label>
         <input type="text" id="email" name="email" size="45"
-               value="${authUser.email}"
+               value="${user.email}"
         >
         <label for="password">Password</label>
         <input type="password" id="password" name="password" size="45"
-               value="${authUser.password}"
+               value="${user.password}"
         >
         <input type="submit" value="Login">
     </form>

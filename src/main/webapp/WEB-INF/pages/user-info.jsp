@@ -54,7 +54,7 @@
 <%--<jsp:useBean id="loggedUser" scope="session" class="model.User"/>--%>
 <header>
     <div class="content">
-        <h1 id="header_text">Welcome, ${authUser.firstName}</h1>
+        <h1 id="header_text">Welcome, ${user.firstName}</h1>
         <a id="logout_link" class="link_button" href="logout">Logout</a>
     </div>
 </header>
@@ -63,22 +63,22 @@
         <caption><p id="table_caption">Your profile details:</p></caption>
         <tr>
             <td class="field_name">E-mail:</td>
-            <td><c:out value="${authUser.email}"/></td>
+            <td><c:out value="${user.email}"/></td>
         </tr>
         <tr>
             <td class="field_name">First name:</td>
-            <td><c:out value="${authUser.firstName}"/></td>
+            <td><c:out value="${user.firstName}"/></td>
         </tr>
         <tr>
             <td class="field_name">Last name:</td>
-            <td><c:out value="${authUser.lastName}"/></td>
+            <td><c:out value="${user.lastName}"/></td>
         </tr>
         <tr>
             <td class="field_name">Country:</td>
-            <td><c:out value="${authUser.country}"/></td>
+            <td><c:out value="${user.country}"/></td>
         </tr>
     </table>
-    <a id="edit_link" class="link_button" href="edit?id=${authUser.id}">Edit profile</a>
+    <a id="edit_link" class="link_button" href="edit?id=${user.id}">Edit profile</a>
 </div>
 </body>
 </html>
